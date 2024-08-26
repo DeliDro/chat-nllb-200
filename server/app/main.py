@@ -13,9 +13,9 @@ class Credentials(BaseModel):
 
 class Message(BaseModel):
     texte: str
-    langue: str
+    langue: str = ""
     expediteur: str
-    destinataire: str
+    destinataire: str = ""
     id: int = -1
 
 class InfosReception(BaseModel):
@@ -39,9 +39,7 @@ def recevoir(infos: InfosReception) -> list[Message]:
     return [
         Message(
             texte="Message de réception " + str(i - infos.idDernierMessage),
-            langue="En",
             expediteur="test@test.com",
-            destinataire=infos.user,
             id = i
         )
 
