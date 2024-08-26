@@ -12,7 +12,6 @@ current_directory = os.getcwd()
 
 # Chemin complet vers la base de données dans le répertoire actuel
 DB_PATH = os.path.join(current_directory, "../../volumes/sql",'messagerie.db')
-print(DB_PATH)
 
 def init_database():
 
@@ -234,7 +233,7 @@ if __name__ == "__main__":
     creer_utilisateur(
         user = "test@test.com",
         password = "1234",
-        langue = "en",
+        langue = "eng_Latn",
         fonction = "SPM",
         departement = "Log",
         pays = "USA"
@@ -243,7 +242,7 @@ if __name__ == "__main__":
     creer_utilisateur(
         user = "semirat216@gmail.com",
         password = "1234",
-        langue = "fr",
+        langue = "fra_Latn",
         fonction = "Alt DA",
         departement = "DS2P",
         pays = "France"
