@@ -15,14 +15,19 @@ def init_database():
 
     # Connexion à la base de données SQLite
     # Si la base de données n'existe pas, elle sera créée.
-    conn = sqlite3.connect(DB_NAME)
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     # Création de la table USERS
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS USERS (
             user TEXT PRIMARY KEY,
-            password TEXT NOT NULL
+            password TEXT NOT NULL,
+            langue VARCHAR(10),
+            fonction VARCHAR(100),
+            departement VARCHAR(100),
+            pays VARCHAR(50),
+            inactif BOOLEAN,
         );
     ''')
 

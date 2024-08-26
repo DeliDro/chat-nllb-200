@@ -1,0 +1,40 @@
+Interface de Messagerie:
+    - Inscription
+    - Connexion
+    - Rechercher un utilisateur
+    - Envoyer un message
+    - Recevoir un message
+        Opération effectuée automatiquement
+        par un système de poll qui recherche
+        à intervalle régulier les derniers messages reçus
+    
+    - Modifier ses informations 
+    - Supprimer son compte
+
+API:
+    - Inscription
+    - Connexion
+    - Envoyer
+    - Recevoir
+
+Base de données:
+    - Ajouter un utilisateur
+    - Vérfier les informations d'un utilisateur
+    - Ajouter un message
+    - Ajouter une traduction
+    - Rechercher un utilisateur
+
+    - Modifier les informations d'un utilisateur
+    - Supprimer un message
+    - Supprimer un compe utilisateur
+
+Module de traduction:
+    Reçoit un message et le traduit dans la langue souhaité
+    parmi les 200 langue disponibles dans NLLB-200 de MetaAI.
+
+    Il est appelé par l'API au moment de l'enregistrement des messages
+    dans la base de données, au cours de l'envoi.
+
+    Les messages sont automatiquement dupliqués entre la version originale
+    et la version traduite pour permettre une conversation multilingue.
+    

@@ -1,3 +1,4 @@
 # Liste des librairies Python à utiliser
 fastapi[standard]
 pydantic
+bcrypt
