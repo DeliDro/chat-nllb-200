@@ -3,6 +3,8 @@ Module principal pour l'API
 """
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 import database
@@ -33,7 +35,28 @@ class InfosReception(BaseModel):
     user: str
     id_dernier_message: int
 
+class InfosChargement(BaseModel):
+    expediteur: str
+    destinataire: str
+
 app = FastAPI()
+
+# Mount the static directory to serve files
+app.mount("/images", StaticFiles(directory="/images"), name="images")
+
+# CORS Policy
+origins = [
+    "http://localhost:8000",
+    "http://localhost:8080"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Allows specific origins
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],  # Allows all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allows all headers
+)
 
 @app.post("/inscription")
 def inscription(userInfos: UserInfosInscription):
@@ -78,6 +101,13 @@ def recevoir(infos: InfosReception) -> list[MessageReception]:
     ]
 
     return messages
+
+@app.post("/charger-conversation")
+def charger_conversation(infos: InfosChargement):
+    return database.charger_conversation(
+        expediteur = infos.expediteur,
+        destinataire = infos.destinataire
+    )
 
 @app.get("/test")
 def test():

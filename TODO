@@ -1,34 +1,36 @@
 Interface de Messagerie:
-    - Inscription
-    - Connexion
-    - Rechercher un utilisateur
-    - Envoyer un message
-    - Recevoir un message
+    ☐ Inscription
+    ☐ Connexion
+    ☐ Rechercher un utilisateur
+    ✔ Envoyer un message @done(24-08-26 23:40)
+    ✔ Recevoir un message @done(24-08-26 23:41)
         Opération effectuée automatiquement
         par un système de poll qui recherche
         à intervalle régulier les derniers messages reçus
     
-    - Modifier ses informations 
-    - Supprimer son compte
+    ☐ Modifier ses informations 
+    ☐ Supprimer son compte
 
 API:
-    - Inscription
-    - Connexion
-    - Envoyer
-    - Recevoir
+    ✔ Inscription @done(24-08-26 18:30)
+    ✔ Connexion @done(24-08-26 18:30)
+    ✔ Envoyer @done(24-08-26 18:30)
+    ✔ Recevoir @done(24-08-26 18:30)
+    
+    ☐ Rechercher un utilisateur
 
 Base de données:
-    - Ajouter un utilisateur
-    - Vérfier les informations d'un utilisateur
-    - Ajouter un message
-    - Ajouter une traduction
-    - Rechercher un utilisateur
+    ✔ Ajouter un utilisateur @done(24-08-26 18:31)
+    ✔ Vérfier les informations d'un utilisateur @done(24-08-26 18:31)
+    ✔ Ajouter un message @done(24-08-26 18:31)
+    ✔ Ajouter une traduction @done(24-08-26 18:31)
+    ☐ Rechercher un utilisateur
 
-    - Modifier les informations d'un utilisateur
-    - Supprimer un message
-    - Supprimer un compe utilisateur
+    ☐ Modifier les informations d'un utilisateur
+    ☐ Supprimer un message
+    ☐ Supprimer un compe utilisateur
 
-Module de traduction:
+✔ Module de traduction: @done(24-08-26 20:04)
     Reçoit un message et le traduit dans la langue souhaité
     parmi les 200 langue disponibles dans NLLB-200 de MetaAI.
 

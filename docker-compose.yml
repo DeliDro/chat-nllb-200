@@ -1,0 +1,33 @@
+networks:
+  local-network:
+    driver: bridge
+
+services:
+  client:
+    build: ./client
+    container_name: client-service
+    networks:
+      - local-network
+    ports:
+      - "8080:80"
+
+  server:
+    build: ./server
+    container_name: server-service
+    networks:
+      - local-network
+    volumes:
+      - ./volumes/sql:/sql
+      - ./volumes/images:/images
+    ports:
+      - "5000:5000"
+
+  traduction:
+    build: ./traduction
+    container_name: traduction-service
+    networks:
+      - local-network
+    volumes:
+      - ./volumes/saved_model:/saved_model
+    ports:
+      - "8000:8000"

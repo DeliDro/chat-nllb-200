@@ -6,6 +6,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 FROM base-traduction
 
+RUN mkdir /saved_model
+
 COPY ./app /app
 
-CMD ["fastapi", "dev", "app/main.py", "--port", "8090"]
+CMD ["fastapi", "run", "app/main.py", "--port", "8000"]

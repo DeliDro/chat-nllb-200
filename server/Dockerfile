@@ -14,6 +14,7 @@ FROM base
 # Copie du code de l'application dans le conteneur
 COPY ./app /app
 
+RUN mkdir /sql /images
 
 # Démarrage du conteneur
-CMD ["fastapi", "run", "app/main.py", "--port", "8080"]
+CMD ["fastapi", "run", "app/main.py", "--port", "5000"]

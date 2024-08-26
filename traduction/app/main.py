@@ -8,7 +8,7 @@ from pydantic import BaseModel
 current_directory = os.getcwd()
 
 # Chemin complet vers la base de données dans le répertoire actuel
-MAIN_FOLDER = os.path.join(current_directory, r"../../volumes/saved_model/")
+MAIN_FOLDER = r"/saved_model/"
 
 TOKENIZER_PATH = os.path.join(MAIN_FOLDER, r"tokenizer/")
 MODEL_PATH = os.path.join(MAIN_FOLDER, r"nllb/")
@@ -52,7 +52,7 @@ class Traducteur:
 
         traduction = self.model.generate(
             **inputs,
-            forced_bos_token_id = self.tokenizer.lang_code_to_id[langue_cible]
+            forced_bos_token_id = self.tokenizer.convert_tokens_to_ids(langue_cible)
         )
 
         traduction = self.tokenizer.decode(

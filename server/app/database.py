@@ -11,7 +11,7 @@ import json
 current_directory = os.getcwd()
 
 # Chemin complet vers la base de données dans le répertoire actuel
-DB_PATH = os.path.join(current_directory, "../../volumes/sql",'messagerie.db')
+DB_PATH = os.path.join(r"/sql/",'messagerie.db')
 
 def init_database():
 
@@ -116,11 +116,11 @@ def chercher_derniers_messages(user, id_dernier_message):
     cursor = conn.cursor()
 
     try:
-        # Récupérer le mot de passe crypté depuis la base de données pour l'utilisateur donné
         cursor.execute(
             'SELECT M.id, M.expediteur, T.texte '
             'FROM Messages M, Traductions T '
-            'WHERE M.destinataire = ? AND M.id > ? AND M.id = T.id',
+            'WHERE M.destinataire = ? AND M.id > ? AND M.id = T.id '
+            'ORDER BY M.id ASC',
             (user, id_dernier_message)
         )
         result = cursor.fetchall()
@@ -134,6 +134,52 @@ def chercher_derniers_messages(user, id_dernier_message):
         conn.close()
     
     return []
+
+def charger_conversation(expediteur, destinataire):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            'SELECT M.id, M.texte, M.expediteur '
+            'FROM Messages M '
+            'WHERE M.expediteur = ? AND M.destinataire = ?',
+            (expediteur, destinataire)
+        )
+        messages_envoyes = cursor.fetchall()
+
+        cursor.execute(
+            'SELECT M.id, T.texte, M.expediteur '
+            'FROM Messages M, Traductions T '
+            'WHERE M.expediteur = ? AND M.destinataire = ? AND M.id = T.id',
+            (destinataire, expediteur)
+        )
+
+        messages_recus = cursor.fetchall()
+
+        messages = [*messages_recus, *messages_envoyes]
+
+        messages.sort()
+
+        messages = [
+            {
+                "id": message[0],
+                "texte": message[1],
+                "expediteur": message[2]
+            }
+            for message in messages
+        ]
+        
+        return messages
+    
+    except Exception as e:
+        print("ERROR:", e, flush = True)
+
+    finally:
+        conn.close()
+    
+    return []
+
 
 def ajouter_message(texte, expediteur, destinataire):
     conn = sqlite3.connect(DB_PATH)
@@ -182,6 +228,8 @@ def ajouter_message(texte, expediteur, destinataire):
 
 def traduire(texte, langue_source, langue_cible):
     headers = {"Content-Type": "application/json"}
+    HOST = "host.docker.internal"
+    PORT = 8000
     
     try:
         payload = {
@@ -192,7 +240,7 @@ def traduire(texte, langue_source, langue_cible):
 
         # Réponse de l'appel POST pour la traduction
         response = requests.post(
-            "http://localhost:8090/traduire",
+            f"http://{HOST}:{PORT}/traduire",
             headers = headers,
             data = json.dumps(payload)
         )
@@ -228,34 +276,40 @@ def get_langue(user):
     return ""
 
 if __name__ == "__main__":
-    init_database()
+    # init_database()
 
-    creer_utilisateur(
-        user = "test@test.com",
-        password = "1234",
-        langue = "eng_Latn",
-        fonction = "SPM",
-        departement = "Log",
-        pays = "USA"
-    )
+    # creer_utilisateur(
+    #     user = "test@test.com",
+    #     password = "1234",
+    #     langue = "eng_Latn",
+    #     fonction = "SPM",
+    #     departement = "Log",
+    #     pays = "USA"
+    # )
 
-    creer_utilisateur(
-        user = "semirat216@gmail.com",
-        password = "1234",
-        langue = "fra_Latn",
-        fonction = "Alt DA",
-        departement = "DS2P",
-        pays = "France"
-    )
+    # creer_utilisateur(
+    #     user = "semirat216@gmail.com",
+    #     password = "1234",
+    #     langue = "fra_Latn",
+    #     fonction = "Alt DA",
+    #     departement = "DS2P",
+    #     pays = "France"
+    # )
 
-    ajouter_message(
-        texte = "Bonjour, comment va la famille ?",
-        expediteur = "semirat216@gmail.com",
-        destinataire = "test@test.com"
-    )
+    # ajouter_message(
+    #     texte = "Bonjour, comment va la famille ?",
+    #     expediteur = "semirat216@gmail.com",
+    #     destinataire = "test@test.com"
+    # )
+
+    # ajouter_message(
+    #     texte = "My family is doing well.",
+    #     expediteur = "test@test.com",
+    #     destinataire = "semirat216@gmail.com"
+    # )
 
     a = chercher_derniers_messages(
-        "test@test.com",
-        0
+        "semirat216@gmail.com",
+        2
     )
     print(a)
