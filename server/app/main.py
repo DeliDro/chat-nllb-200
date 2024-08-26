@@ -5,46 +5,79 @@ Module principal pour l'API
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-app = FastAPI()
+import database
 
-class Credentials(BaseModel):
+class UserInfosInscription(BaseModel):
+    user: str
+    password: str
+    langue: str
+    fonction: str
+    departement: str
+    pays: str
+
+class UserInfosConnexion(BaseModel):
     user: str
     password: str
 
-class Message(BaseModel):
+class MessageEnvoi(BaseModel):
     texte: str
-    langue: str = ""
     expediteur: str
-    destinataire: str = ""
-    id: int = -1
+    destinataire: str
+
+class MessageReception(BaseModel):
+    texte: str
+    expediteur: str
+    id: int
 
 class InfosReception(BaseModel):
     user: str
-    idDernierMessage: int
+    id_dernier_message: int
+
+app = FastAPI()
 
 @app.post("/inscription")
-def inscription(creds: Credentials):
-    return f"Inscription de {creds.user}::{creds.password}"
+def inscription(userInfos: UserInfosInscription):
+    return database.creer_utilisateur(
+        user = userInfos.user,
+        password = userInfos.password,
+        langue = userInfos.langue,
+        fonction = userInfos.fonction,
+        departement = userInfos.departement,
+        pays = userInfos.pays
+    )
 
 @app.post("/connexion")
-def connexion(creds: Credentials):
-    return f"Connexion de {creds.user}::{creds.password}"
+def connexion(userInfos: UserInfosConnexion):
+    return database.verifier_identifiants(
+        user = userInfos.user,
+        password = userInfos.password
+    )
 
 @app.post("/envoyer")
-def envoyer(message: Message):
-    return f'Nouveau message: "{message.texte}" en {message.langue} de {message.expediteur} à {message.destinataire}'
+def envoyer(message: MessageEnvoi):
+    return database.ajouter_message(
+        texte = message.texte,
+        expediteur = message.expediteur,
+        destinataire = message.destinataire
+    )
 
 @app.post("/recevoir")
-def recevoir(infos: InfosReception) -> list[Message]:
-    return [
-        Message(
-            texte="Message de réception " + str(i - infos.idDernierMessage),
-            expediteur="test@test.com",
-            id = i
-        )
+def recevoir(infos: InfosReception) -> list[MessageReception]:
+    messages = database.chercher_derniers_messages(
+        user = infos.user,
+        id_dernier_message = infos.id_dernier_message
+    )
 
-        for i in range(infos.idDernierMessage + 1, infos.idDernierMessage + 4)
+    messages = [
+        MessageReception(
+            id = message[0],
+            expediteur = message[1],
+            texte = message[2]           
+        )
+        for message in messages
     ]
+
+    return messages
 
 @app.get("/test")
 def test():
